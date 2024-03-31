@@ -1,0 +1,156 @@
+<script>
+    const button = document.getElementsByClassName("download-button")[0];
+
+    button.addEventListener("click", handleDownloadButton);
+
+    async function handleDownloadButton() {
+        console.log("Button Clicked");
+
+        let Input = await document.getElementById("youtubeUrl");
+        let URL = await Input.value;
+
+        if (!URL || URL === "") {
+            return showAlert("Please provide a link to start.");
+        }
+
+        let checkRegex = await YoutubeRegex(URL);
+
+        if (!checkRegex) {
+            return showAlert("Please provide a valid YouTube link.");
+        }
+
+        const parsedURL = await parseURL(URL);
+
+        const element = await document.getElementById("formm");
+
+        try {
+            element.innerHTML = `
+    <div class="loader">
+                                <p class="text">
+                                <span class="letter letter1">L</span>
+                                <span class="letter letter2">o</span>
+                                <span class="letter letter3">a</span>
+                                <span class="letter letter4">d</span>
+                                <span class="letter letter5">i</span>
+                                <span class="letter letter6">n</span>
+                                <span class="letter letter7">g</span>
+                                <span class="letter letter8">.</span>
+                                <span class="letter letter9">.</span>
+                                <span class="letter letter10">.</span>
+                                </p>
+                              </div>
+    `;
+
+    const request = await fetch(
+                `https://<%- req.get('host') %>/api/youtube?url=${parsedURL}`
+            );
+
+            const response = await request.json();
+
+            console.log(response);
+
+            if (request.status === 200) {
+                let button = `
+                        <button class="Btn">
+  <svg
+    class="svgIcon"
+    viewBox="0 0 384 512"
+    height="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+    ></path>
+  </svg>
+  <span class="icon2"></span>
+</button>
+
+                        `;
+
+                        let completeButton = `<a href="${response.data.video}">${button}</a>`;
+
+                        element.innerHTML = completeButton;
+
+                        localStorage.setItem("changeButton", true);
+                    }
+            } catch (e) {
+                console.log(e);
+            showAlert(
+                "An error occurred. Please try again later and if this error continues reach out to codesuthar on Instagram."
+            );
+        }
+        }
+
+    function YoutubeRegex(url) {
+    const regex = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|playlist\?|watch\?v=|watch\?.+(?:&|&amp;|&#38;);v=))([a-zA-Z0-9\-_]{11})(?:(?:\?|&|&amp;|&#38;)index=((?:\d){1,3}))?(?:(?:\?|&|&amp;|&#38;)?list=([a-zA-Z\-_0-9]{34}))?(?:\S+)?$/
+
+    return regex.test(url);
+}
+
+function parseURL(url) {
+    const regex = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|playlist\?|watch\?v=|watch\?.+(?:&|&amp;|&#38;);v=))([a-zA-Z0-9\-_]{11})(?:(?:\?|&|&amp;|&#38;)index=((?:\d){1,3}))?(?:(?:\?|&|&amp;|&#38;)?list=([a-zA-Z\-_0-9]{34}))?(?:\S+)?$/
+
+    if (regex.test(url)) {
+        return url;
+    } else {
+        const regexWithoutProtocol = /^(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|playlist\?|watch\?v=|watch\?.+(?:&|&amp;|&#38;);v=))([a-zA-Z0-9\-_]{11})(?:(?:\?|&|&amp;|&#38;)index=((?:\d){1,3}))?(?:(?:\?|&|&amp;|&#38;)?list=([a-zA-Z\-_0-9]{34}))?(?:\S+)?$/
+
+        if (regexWithoutProtocol.test(url)) {
+            return `https://${url}`;
+        } else {
+            return false;
+        }
+    }
+}
+
+    function showAlert(string) {
+        const alertElement = document.getElementById("err");
+        const alertMessage = document.getElementById("alertMSG");
+
+        alertMessage.innerHTML = string;
+
+        alertElement.style.display = "flex";
+
+        console.log("Alert Displayed");
+
+        // Hide alert after 3 seconds
+
+        setTimeout(() => {
+            alertElement.style.display = "none";
+        }, 3000);
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const inputURL = await document.getElementById("youtubeUrl");
+
+        inputURL.addEventListener("input", async () => {
+            const changeButton = localStorage.getItem("changeButton");
+
+            if (changeButton) {
+                const element = await document.getElementById("formm");
+
+                element.innerHTML = `<button class="download-button enabledbutton">
+                            <span class="enabledbutton-content">Fetch</span>
+                        </button>`;
+
+
+                const button = document.getElementsByClassName("download-button")[0];
+
+                button.addEventListener("click", handleDownloadButton);
+
+                localStorage.removeItem("changeButton");
+            }
+        });
+    });
+
+    //  When the page is reloaded is clicked the localstorage will be cleared
+    window.addEventListener("beforeunload", async () => {
+        await localStorage.clear();
+    });
+
+    // When page is loaded the localstorage will be cleared
+    window.addEventListener("load", async () => {
+        await localStorage.clear();
+    });
+</script>

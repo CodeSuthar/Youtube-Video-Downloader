@@ -1,0 +1,25 @@
+{
+  "name": "youtube-video-downloader",
+  "version": "0.0.1",
+  "description": "Wondered Sometimes To Download Youtube Video Without Annoying & NSFW Ads. CodeSuthar's Downloader is here!",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeSuthar/Youtube-Video-Downloader.git"
+  },
+  "author": "CodeSuthar",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/CodeSuthar/Youtube-Video-Downloader/issues"
+  },
+  "homepage": "https://github.com/CodeSuthar/Youtube-Video-Downloader#readme",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "nayan-media-downloader": "^2.1.3"
+  }
+}
